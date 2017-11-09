@@ -3,11 +3,12 @@ print "-----"
 import urllib2
 
 # ----- CRAWLER ----- #
-MAX_DEPTH = 1
+MAX_DEPTH = 2
 urlGraph = {}
 
-def getAllNewLinksOnPage(page,prevLinks,graph):
-
+#Gets returns unseen links on each page
+#Assigns all links to the global url graph
+def getLinksOnPage(page,prevLinks):
         response = urllib2.urlopen(page)
         html = response.read()
 
@@ -31,10 +32,8 @@ def getAllNewLinksOnPage(page,prevLinks,graph):
                 else:
                         allFound=True   
 
-        graph[page] = allLinks
-        graphAndLinks = [graph, links]
-        return graphAndLinks
-        #return links
+        urlGraph[page] = allLinks
+        return links
 
 def crawl(urlSeed):
     toCrawl=[[urlSeed,0]] #becomes a list of lists - each element in the list is a list containing two items, URL and depth location.
@@ -47,9 +46,14 @@ def crawl(urlSeed):
         crawled.append(nextURL) #Record that we have crawled the url(doing it now...)
 
         if nextIndex < MAX_DEPTH:
-                newLinks = getAllNewLinksOnPage(nextURL, crawled, urlGraph)  #find all links at depth x      
-                for links in newLinks[1]:
+                newLinks = getLinksOnPage(nextURL, crawled)  #find all links at depth x      
+                for links in newLinks:
                         toCrawl.append([links, nextIndex+1])    #found links are x+1 deep
 
 # ----- /CRAWLER ----- #
-crawl("http://adrianmoore.net/finalyear")
+crawl("http://193.61.191.117/~B00664468/COM%20506%20-%20Professional%20Web%20Services%20Dev/B3/test_web/test_index.html")
+for pages in urlGraph:
+        print "Key: "
+        print pages
+        print "Values: "
+        print urlGraph[pages]
