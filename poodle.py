@@ -4,7 +4,8 @@ import urllib2
 
 # ----- CRAWLER ----- #
 MAX_DEPTH = 2
-urlGraph = {}
+urlGraph = {}   #Store EVERY URL contained by each URL
+crawled=[]      #Store Unique URLs visited
 
 #Gets returns unseen links on each page
 #Assigns all links to the global url graph
@@ -37,7 +38,6 @@ def getLinksOnPage(page,prevLinks):
 
 def crawl(urlSeed):
     toCrawl=[[urlSeed,0]] #becomes a list of lists - each element in the list is a list containing two items, URL and depth location.
-    crawled=[]
     while toCrawl:
         nextPage = toCrawl.pop()#Get "hub" url and its depth level (depth x+1)
         nextURL = nextPage[0]   #Retrieve URL
@@ -51,9 +51,14 @@ def crawl(urlSeed):
                         toCrawl.append([links, nextIndex+1])    #found links are x+1 deep
 
 # ----- /CRAWLER ----- #
+
+# ----- SCRAPER ----- #
+
+#Indexes unique words from a set of urls 
+
+# ----- /SCRAPER ----- #
+
+#MAIN#
 crawl("http://193.61.191.117/~B00664468/COM%20506%20-%20Professional%20Web%20Services%20Dev/B3/test_web/test_index.html")
-for pages in urlGraph:
-        print "Key: "
-        print pages
-        print "Values: "
-        print urlGraph[pages]
+#TODO: Scraper: index unique words from urls found (use unique urls for performance)
+#TODO: PageRank: use url graph to calculate page weights
