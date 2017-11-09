@@ -1,12 +1,30 @@
 print "POODLE"
 print "-----"
 import urllib2
+import pickle
 
 # ----- CRAWLER ----- #
+#__GLOBALS__
 MAX_DEPTH = 2
 urlGraph = {}   #Store EVERY URL contained by each URL
 crawled=[]      #Store Unique URLs visited
 
+#__INTERACE__
+def crawl(urlSeed):
+    toCrawl=[[urlSeed,0]] #becomes a list of lists - each element in the list is a list containing two items, URL and depth location.
+    while toCrawl:
+        nextPage = toCrawl.pop()#Get "hub" url and its depth level (depth x+1)
+        nextURL = nextPage[0]   #Retrieve URL
+        nextIndex = nextPage[1] #Retrieve URL depth
+        
+        crawled.append(nextURL) #Record that we have crawled the url(doing it now...)
+
+        if nextIndex < MAX_DEPTH:
+                newLinks = getLinksOnPage(nextURL, crawled)  #find all links at depth x      
+                for links in newLinks:
+                        toCrawl.append([links, nextIndex+1])    #found links are x+1 deep
+
+#__IMPLEMENTATION__
 #Gets returns unseen links on each page
 #Assigns all links to the global url graph
 def getLinksOnPage(page,prevLinks):
@@ -36,37 +54,75 @@ def getLinksOnPage(page,prevLinks):
         urlGraph[page] = allLinks
         return links
 
-def crawl(urlSeed):
-    toCrawl=[[urlSeed,0]] #becomes a list of lists - each element in the list is a list containing two items, URL and depth location.
-    while toCrawl:
-        nextPage = toCrawl.pop()#Get "hub" url and its depth level (depth x+1)
-        nextURL = nextPage[0]   #Retrieve URL
-        nextIndex = nextPage[1] #Retrieve URL depth
-        
-        crawled.append(nextURL) #Record that we have crawled the url(doing it now...)
 
-        if nextIndex < MAX_DEPTH:
-                newLinks = getLinksOnPage(nextURL, crawled)  #find all links at depth x      
-                for links in newLinks:
-                        toCrawl.append([links, nextIndex+1])    #found links are x+1 deep
 
 # ----- /CRAWLER ----- #
 
 # ----- SCRAPER ----- # #Indexes unique words from a set of urls 
+#__GLOBALS__
 index = {}
 pageWords = []
 
+#__INTERFACE__
 def scrape(urls):
         for url in urls:
-                #get Page text
-                #add page to index
+                #get Page text for the current url
+                pageWords = getPageText(url)
+                #add page to index - correspond to keyword
+                addPageToIndex(index,pageWords,url)
 
+#__IMPLEMENTATION__
+def getPageText(url):   #Gets every unique word on a page
+	response = urllib2.urlopen(url)
+	html = response.read()
+
+	pageText,pageWords="",[]
+	html=html[html.find("<body")+5:html.find("</body>")]
+
+	startScript=html.find("<script")
+	while startScript>-1:
+		endScript=html.find("</script>")
+		html=html[:startScript]+html[endScript+9:]
+		startScript=html.find("<script")
+    
+	ignore=[]
+	fin=open("ignorelist.txt","r")
+	for word in fin:
+		ignore.append(word.strip())
+	fin.close()
+    	
+	finished=False
+	while not finished:
+		nextCloseTag=html.find(">")
+		nextOpenTag=html.find("<")
+		if nextOpenTag>-1:
+			content=" ".join(html[nextCloseTag+1:nextOpenTag].strip().split())
+			pageText=pageText+" "+content
+			html=html[nextOpenTag+1:]
+		else:
+			finished=True
+		
+	for word in pageText.split():
+		if word[0].isalnum() and not word in ignore:
+			if not word in pageWords:
+				pageWords.append(word)
+	
+	return pageWords
+
+def addPageToIndex (index,pageWords,url):       #Page added "implicitly"
+	for word in pageWords:  #for each unique word on the current page
+		addWordToIndex(index,word,url)  #add the word to the scraper's index
+
+def addWordToIndex(index,word,url):
+        if word in index:
+                index[word].append(url) #go to Key: "Word", add the current page URL
+        else:
+                index[word] = [url]               
 
 # ----- /SCRAPER ----- #
 
 #MAIN#
 crawl("http://193.61.191.117/~B00664468/COM%20506%20-%20Professional%20Web%20Services%20Dev/B3/test_web/test_index.html")
-#TODO: Scraper: index unique words from urls found (use unique urls for performance)
-#scrape(crawled)
-
+scrape(crawled)
+print index
 #TODO: PageRank: use url graph to calculate page weights
