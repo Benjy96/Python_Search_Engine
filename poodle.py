@@ -52,13 +52,21 @@ def crawl(urlSeed):
 
 # ----- /CRAWLER ----- #
 
-# ----- SCRAPER ----- #
+# ----- SCRAPER ----- # #Indexes unique words from a set of urls 
+index = {}
+pageWords = []
 
-#Indexes unique words from a set of urls 
+def scrape(urls):
+        for url in urls:
+                #get Page text
+                #add page to index
+
 
 # ----- /SCRAPER ----- #
 
 #MAIN#
 crawl("http://193.61.191.117/~B00664468/COM%20506%20-%20Professional%20Web%20Services%20Dev/B3/test_web/test_index.html")
 #TODO: Scraper: index unique words from urls found (use unique urls for performance)
+#scrape(crawled)
+
 #TODO: PageRank: use url graph to calculate page weights
