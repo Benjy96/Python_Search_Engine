@@ -245,14 +245,12 @@ def poodleIndex():
      "-print": poodlePrint,
      "-help": poodleHelp,
      "-exit": sys.exit}
-
-    #If we fell through the switch with a dash at the start of string, invalid command was entered
-    if user_input[0] == "-":
-        poodleOutput("Please enter a valid command!")
-        poodleIndex()
     
     if user_input in poodleOpts:
         poodleOpts[user_input]()
+        poodleIndex()
+    elif user_input[0] == "-":
+        poodleOutput("Please enter a valid command!")
         poodleIndex()
     else:
         count = 0
