@@ -226,7 +226,8 @@ def poodlePrint():
     print urlGraph
 
     poodleOutput("----- PAGE RANKS -----")
-    print pageRanks
+    for url in pageRanks:
+        print "%s  %f" % (url, pageRanks[url])
 
 def poodleIndex():
     poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
