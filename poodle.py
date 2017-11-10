@@ -3,10 +3,11 @@ print "-----"
 import urllib2
 import pickle
 import random
+import sys
 
 # ----- CRAWLER ----- #
 #__GLOBALS__
-MAX_DEPTH = 2
+MAX_DEPTH = 3
 urlGraph = {}   #Store EVERY URL contained by each URL {Key: [url1, url2, url3, etc]}
 crawled=[]      #Store Unique URLs visited
 
@@ -223,11 +224,13 @@ def poodlePrint():
     print index
 
     poodleOutput("----- GRAPH -----")
-    print urlGraph
+    for page in urlGraph:
+        print page
+        print "\t{}".format(urlGraph[page])
 
     poodleOutput("----- PAGE RANKS -----")
     for url in pageRanks:
-        print "%s  %f" % (url, pageRanks[url])
+        print "{} = RANK: {}".format(url, pageRanks[url])
 
 def poodleIndex():
     poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
@@ -239,7 +242,8 @@ def poodleIndex():
      "-dump": poodleDump,
      "-restore": poodleRestore,
      "-print": poodlePrint,
-     "-help": poodleHelp}
+     "-help": poodleHelp,
+     "-exit": sys.exit()}
 
     if setup_input in poodleOpts:
         poodleOpts[setup_input]()
