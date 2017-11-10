@@ -45,7 +45,6 @@ def getLinksOnPage(page,prevLinks):
                                 allLinks.append(url)    #store ALL links
                                 if not url in links and not url in prevLinks:   #store UNIQUE links
                                         links.append(url)     
-                                        print "Unseen URL Found: " + url
                         closeTag=html.find("</a>",aTag)
                         pos=closeTag+1
                 else:
@@ -155,4 +154,3 @@ def rankPages(graph):
 crawl("http://193.61.191.117/~B00664468/COM%20506%20-%20Professional%20Web%20Services%20Dev/B3/test_web/test_index.html")
 scrape(crawled)
 pageRanks = rankPages(urlGraph)
-#TODO: PageRank: use url graph to calculate page weights
