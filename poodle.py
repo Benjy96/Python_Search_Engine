@@ -163,10 +163,11 @@ def poodleHelp():
     print ""
     print "POODLE Functionality:"
     print "-build\t\tCreate a POODLE database"
-    print "-dump\t\tSave the POODLE database"
-    print "-restore\t\tRetrieve a POODLE database"
-    print "-print\t\tShow the POODLE database"
+    print "-dump\t\tSave the POODLE database you built"
+    print "-restore\tRetrieve the last saved POODLE database"
+    print "-print\t\tShow the POODLE database (index, graph, and page ranks)"
     print "-help\t\tWhat do you think you're looking at, pal?"
+    print "-exit\t\tI don't like the look of you, anyway"
 
 def poodleBuild():
     poodleOutput("Give me a seed URL! >>> ")
@@ -220,10 +221,11 @@ def poodleRestore():
     poodleOutput("Database loaded!")
 
 def poodlePrint():
-    poodleOutput("----- INDEX -----")
-    print index
+    poodleOutput("----- INDEXED WORDS & RESPECTIVE LOCATIONS -----")
+    for keyword in index:
+        print "{}: {}".format(keyword, index[keyword])
 
-    poodleOutput("----- GRAPH -----")
+    poodleOutput("----- URL GRAPH -----")
     for page in urlGraph:
         print page
         print "\t{}".format(urlGraph[page])
@@ -243,7 +245,7 @@ def poodleIndex():
      "-restore": poodleRestore,
      "-print": poodlePrint,
      "-help": poodleHelp,
-     "-exit": sys.exit()}
+     "-exit": sys.exit}
 
     if setup_input in poodleOpts:
         poodleOpts[setup_input]()
