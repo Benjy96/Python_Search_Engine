@@ -1,2 +1,14 @@
 (dp0
-.
+S'http://adrianmoore.net/com506/test_web/pageRank.html'
+p1
+F0.05471835027581798
+sS'http://adrianmoore.net/com506/test_web/content.html'
+p2
+F0.07797633920289931
+sS'http://adrianmoore.net/com506/test_web/index.html'
+p3
+F0.06075798892708134
+sS'http://adrianmoore.net/com506/test_web/webcrawler.html'
+p4
+F0.05471835027581798
+s.

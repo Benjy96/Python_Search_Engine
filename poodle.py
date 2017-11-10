@@ -176,6 +176,7 @@ def poodleBuild():
         print url
     poodleOutput("Database created!")
     scrape(crawled)
+    global pageRanks
     pageRanks = rankPages(urlGraph)
 
 def poodleDump():   #heh
@@ -218,8 +219,14 @@ def poodleRestore():
     poodleOutput("Database loaded!")
 
 def poodlePrint():
-    poodleOutput("\n----- PAGE RANKS -----")
+    poodleOutput("----- INDEX -----")
+    print index
+
+    poodleOutput("----- GRAPH -----")
     print urlGraph
+
+    poodleOutput("----- PAGE RANKS -----")
+    print pageRanks
 
 def poodleIndex():
     poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
