@@ -125,7 +125,34 @@ def addWordToIndex(index,word,url):
 
 # ----- /SCRAPER ----- #
 
+# ----- PAGE RANKER ----- #
+#__GLOBALS__
+pageRanks = {}
+
+def rankPages(graph):
+    d=0.85
+    numLoops=10
+    npages=len(graph)
+    ranks = {}
+    
+    for page in graph:
+        ranks[page]=1.0/npages
+    
+    for i in range(0,numLoops):
+        newRanks={}
+        for page in graph:
+            newRank=(1-d)/npages
+            for node in graph:
+                if page in graph[node]:
+                    newRank=newRank+d*(ranks[node]/len(graph[node]))
+            newRanks[page]=newRank
+        ranks=newRanks
+    return ranks
+# ----- /PAGE RANKER ----- #
+
+
 #MAIN#
 crawl("http://193.61.191.117/~B00664468/COM%20506%20-%20Professional%20Web%20Services%20Dev/B3/test_web/test_index.html")
-scrape(crawled) #ensure unique url list used (crawled) for performance - don't want to use the graph
+scrape(crawled)
+pageRanks = rankPages(urlGraph)
 #TODO: PageRank: use url graph to calculate page weights
