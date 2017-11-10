@@ -50,6 +50,7 @@ def getLinksOnPage(page,prevLinks):
                 else:
                         allFound=True   
 
+        global urlGraph
         urlGraph[page] = allLinks
         return links
 
@@ -150,7 +151,6 @@ def rankPages(graph):
 
 # ----- POODLE ----- #
 #__GLOBALS__
-INSENSITIVE_INDEX = {}
 cool_facts = ["POODLE rhymes with google. That type of rhyme is called assonance!", "POODLEs are ghastly looking dogs",
               "POODLE is going to get me 100% on my coursework!", "POODLE knows what you did last summer, if you put it online, that is..."]
 
