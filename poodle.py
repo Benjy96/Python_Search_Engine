@@ -285,14 +285,15 @@ def poodleSetMaxResults():
 				maxDisplayedSet = False;
 
 def poodleSearch(term):
+
     count = 0
     termFoundAt = []
     term = term.lower()
     if term in index:
-        for url in index[term]:
-            count += 1
-            termFoundAt.append(url)
-            
+	    for url in index[term]:
+		    count += 1
+		    termFoundAt.append(url)
+	    
     linkAndRank = []
     for url in termFoundAt:
         linkAndRank.append([[url], pageRanks[url]])
@@ -308,8 +309,6 @@ def poodleSearch(term):
     maxResultCounter = 0
     for x in reversed(linkAndRank):
         maxResultCounter += 1
-        print maxResultCounter
-        print MAX_RESULTS_DISPLAYED
         if maxResultCounter >= MAX_RESULTS_DISPLAYED:
                 break
         print "{} | RANK: {}".format(x[0], x[1])
