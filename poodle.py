@@ -124,6 +124,7 @@ def addWordToIndex(index,word,url):
 #__GLOBALS__
 pageRanks = {}
 
+#__INTERFACE__
 def rankPages(graph):
     d=0.85
     numLoops=10
@@ -169,8 +170,10 @@ def poodleHelp():
     print "-exit\t\tExit the world as we know it!"
 
 def poodleBuild():
-    poodleOutput("Give me a seed URL! >>> ")
+    poodleOutput("Give me a seed URL! >>")
     crawl_seed = raw_input().strip()
+    poodleOutput("Please set a maximum depth for the web crawl procedure! >>")
+    #IMPLEMENT MAX DEPTH
     crawl(crawl_seed)
     poodleOutput("\n----- CRAWLED PAGES -----")
     for url in crawled:
@@ -282,7 +285,7 @@ def poodleIndex():
 
 # ----- /POODLE -----#
 
-#MAIN#
+# ----- MAIN ----- #
 poodleSetup()
 poodleIndex()
 
@@ -291,6 +294,8 @@ poodleIndex()
 #TODO: Remove common words from search index (ignore.txt / scraper)
 #TODO: Ignore case on search (poodle)
 #TODO: Limit depth of Web Crawler (scrape - DONE - add as poodle build option)
+#TODO: check correct pages are visited by crawler
+#TODO: check that max depth is working
 
 
 
