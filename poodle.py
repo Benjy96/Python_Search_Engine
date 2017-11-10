@@ -166,7 +166,7 @@ def poodleHelp():
     print "-restore\tRetrieve the last saved POODLE database"
     print "-print\t\tShow the POODLE database (index, graph, and page ranks)"
     print "-help\t\tWhat do you think you're looking at, pal?"
-    print "-exit\t\tI don't like the look of you, anyway"
+    print "-exit\t\tExit the world as we know it!"
 
 def poodleBuild():
     poodleOutput("Give me a seed URL! >>> ")
@@ -245,8 +245,14 @@ def poodleSearch(term): #TODO: Sort returned & printed search results by page ra
         for url in termFoundAt:
             linkAndRank.append([[url], pageRanks[url]])
 
-        linkAndRank.sort(key=lambda x:x[1])
-        print linkAndRank
+        linkAndRank.sort(key = lambda x:x[1], )   #lambda expression to sort by second list element (rank)
+
+        if count > 1 or count == 0:
+            poodleOutput("{} results found!\n".format(count))
+        else:
+            poodleOutput("{} result found!\n".format(count))
+        for x in reversed(linkAndRank):
+            print "{} | RANK: {}".format(x[0], x[1])
     else:
         poodleOutput("No results found.")
 
