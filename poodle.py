@@ -286,7 +286,11 @@ def poodleIndex():
 poodleSetup()
 poodleIndex()
 
-
+#TODO: Remove punctuation (scraper)
+#TODO: Multi-keyword search (poodle)
+#TODO: Remove common words from search index (ignore.txt / scraper)
+#TODO: Ignore case on search (poodle)
+#TODO: Limit depth of Web Crawler (scrape - DONE - add as poodle build option)
 
 
 
