@@ -175,7 +175,15 @@ def poodleBuild():
     poodleOutput("Give me a seed URL! >>")
     crawl_seed = raw_input().strip()
     poodleOutput("Please set a maximum depth for the web crawl procedure! >>")
-    #IMPLEMENT MAX DEPTH
+
+    global MAX_DEPTH
+    depthSet = False
+    while depthSet != True:
+        depth_input = raw_input().strip()
+        if depth_input.isdigit():
+            depthSet = True
+            MAX_DEPTH = depthSet
+    
     crawl(crawl_seed)
     poodleOutput("\n----- CRAWLED PAGES -----")
     for url in crawled:
@@ -302,7 +310,6 @@ def poodleIndex():
 poodleSetup()
 poodleIndex()
 
-#TODO: Remove punctuation (scraper)
 #TODO: Multi-keyword search (poodle)
 #TODO: Remove common words from search index (ignore.txt / scraper)
 #TODO: Limit depth of Web Crawler (scrape - DONE - add as poodle build option)
