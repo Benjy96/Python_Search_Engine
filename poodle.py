@@ -64,12 +64,16 @@ index = {}
 pageWords = []
 
 #__INTERFACE__
-def scrape(urls):
+def scrape(urls):   #creates an index and saves in a file
         for url in urls:
                 #get Page text for the current url
                 pageWords = getPageText(url)
                 #add page to index - correspond to keyword
                 addPageToIndex(index,pageWords,url)
+        fout = open("index.txt", "w")
+        pickle.dump(index, fout)
+        fout.close()
+        
 
 #__IMPLEMENTATION__
 def getPageText(url):   #Gets every unique word on a page
@@ -123,6 +127,5 @@ def addWordToIndex(index,word,url):
 
 #MAIN#
 crawl("http://193.61.191.117/~B00664468/COM%20506%20-%20Professional%20Web%20Services%20Dev/B3/test_web/test_index.html")
-scrape(crawled)
-print index
+scrape(crawled) #ensure unique url list used (crawled) for performance - don't want to use the graph
 #TODO: PageRank: use url graph to calculate page weights
