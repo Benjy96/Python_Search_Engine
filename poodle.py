@@ -53,9 +53,7 @@ def getLinksOnPage(page,prevLinks):
         global urlGraph
         urlGraph[page] = allLinks
         return links
-
-
-
+    
 # ----- /CRAWLER ----- #
 
 # ----- SCRAPER ----- # #Indexes unique words from a set of urls 
@@ -85,10 +83,10 @@ def getPageText(url):   #Gets every unique word on a page
 		html=html[:startScript]+html[endScript+9:]
 		startScript=html.find("<script")
     
-	ignore=[]
+	ignore=set()
 	fin=open("ignorelist.txt","r")
 	for word in fin:
-		ignore.append(word.strip())
+		ignore.add(word.strip())
 	fin.close()
     	
 	finished=False
@@ -165,7 +163,7 @@ def poodleSetup():
 def poodleHelp():
     print ""
     print "POODLE Functionality:"
-    print "-build\t\tCreate a POODLE database"
+    print "-build\t\tCreate a POODLE database (and set the depth of the web crawler)"
     print "-dump\t\tSave the POODLE database you built"
     print "-restore\tRetrieve the last saved POODLE database"
     print "-print\t\tShow the POODLE database (index, graph, and page ranks)"
@@ -316,5 +314,4 @@ poodleIndex()
 
 #TODO: Multi-keyword search (poodle)
 #TODO: Remove common words from search index (ignore.txt / scraper)
-#TODO: check correct pages are visited by crawler
 
