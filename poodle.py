@@ -178,7 +178,7 @@ def poodleBuild():
     scrape(crawled)
     pageRanks = rankPages(urlGraph)
 
-def poodleDump():
+def poodleDump():   #heh
     #Save Crawled Index
     fout = open("graph.txt", "w")
     pickle.dump(urlGraph, fout)
@@ -199,16 +199,19 @@ def poodleDump():
 def poodleRestore():
     #Load Crawled Index
     fin = open("graph.txt", "r")
+    global urlGraph
     urlGraph = pickle.load(fin)
     fin.close()
 
     #Load Scraped Index
     fin = open("index.txt", "r")
+    global index
     index = pickle.load(fin)
     fin.close()
 
     #Load PageRank Values
     fin = open("ranks.txt", "r")
+    global pageRanks
     pageRanks = pickle.load(fin)
     fin.close()
 
@@ -223,7 +226,7 @@ def poodleIndex():
     setup_input = raw_input()
     setup_input = setup_input.strip()
 
-    #Dictionary - Switch
+    #Dictionary - Switch (Poodle Options)
     poodleOpts = {"-build": poodleBuild,
      "-dump": poodleDump,
      "-restore": poodleRestore,
