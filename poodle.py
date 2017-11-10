@@ -7,7 +7,7 @@ import random
 # ----- CRAWLER ----- #
 #__GLOBALS__
 MAX_DEPTH = 2
-urlGraph = {}   #Store EVERY URL contained by each URL
+urlGraph = {}   #Store EVERY URL contained by each URL {Key: [url1, url2, url3, etc]}
 crawled=[]      #Store Unique URLs visited
 
 #__INTERACE__
@@ -70,10 +70,6 @@ def scrape(urls):   #creates an index and saves in a file
                 pageWords = getPageText(url)
                 #add page to index - correspond to keyword
                 addPageToIndex(index,pageWords,url)
-        fout = open("index.txt", "w")
-        pickle.dump(index, fout)
-        fout.close()
-        
 
 #__IMPLEMENTATION__
 def getPageText(url):   #Gets every unique word on a page
@@ -151,7 +147,7 @@ def rankPages(graph):
 # ----- /PAGE RANKER ----- #
 
 # ----- POODLE ----- #
-
+#__GLOBALS__
 cool_facts = ["POODLE rhymes with google. That type of rhyme is called assonance!", "POODLEs are ghastly looking dogs",
               "POODLE is going to get me 100% on my coursework!", "POODLE knows what you did last summer, if you put it online, that is..."]
 
@@ -170,26 +166,42 @@ def poodleHelp():
     print "-restore\t\tRetrieve a POODLE database"
     print "-print\t\tShow the POODLE database"
     print "-help\t\tWhat do you think you're looking at, pal?"
-    poodleIndex()
 
 def poodleBuild():
     poodleOutput("Give me a seed URL! >>> ")
     crawl_seed = raw_input().strip()
     crawl(crawl_seed)
-    print "----- CRAWLED PAGES -----"
+    poodleOutput("----- CRAWLED PAGES -----")
     for url in crawled:
         print url
     poodleOutput("Database created!")
-    poodleIndex()
+    scrape(crawled)
+    pageRanks = rankPages(urlGraph)
 
 def poodleDump():
-    print "Implement dump pls, lol"
+    #Save Crawled Index
+    fout = open("graph.txt", "w")
+    pickle.dump(urlGraph, fout)
+    fout.close()
+
+    #Save Scraped Index
+    fout = open("index.txt", "w")
+    pickle.dump(index, fout)
+    fout.close()
+
+    #Save Page Ranks
+    fout = open("ranks.txt", "w")
+    pickle.dump(pageRanks, fout)
+    fout.close()
+
+    poodleOutput("Database saved!")
 
 def poodleRestore():
     print "implement restore"
 
 def poodlePrint():
-    print "implement print"
+    print "url graph:\n"
+    print urlGraph
 
 def poodleIndex():
     poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
@@ -205,6 +217,7 @@ def poodleIndex():
 
     if setup_input in poodleOpts:
         poodleOpts[setup_input]()
+        poodleIndex()
     else:
         poodleOutput("Please enter a valid command!")
         poodleIndex()
@@ -213,15 +226,6 @@ def poodleIndex():
 #MAIN#
 poodleSetup()
 poodleIndex()
-
-
-#scrape(crawled)
-#pageRanks = rankPages(urlGraph)
-#TODO: Only do if NEW site (above)
-    #Implement input/setup options
-    #Create the database from user seed url
-    #other debug info, like saving/restoring/printing the db
-    #db is index from a seed
 
 
 
