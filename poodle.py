@@ -294,29 +294,22 @@ def poodleSearch(term):
     
 
 def poodleIndex():
-    poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
-    user_input = raw_input()
-    user_input = user_input.strip()
+	poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
+	user_input = raw_input()
+	user_input = user_input.strip()
+	#Build options (Dictionary/switch structure)
+	poodleOpts = {"-build": poodleBuild,"-dump": poodleDump,"-restore": poodleRestore,"-print": poodlePrint,"-ignore": poodleIgnoreList,"-help": poodleHelp,"-exit": sys.exit}
 
-    #Build options (Dictionary/switch structure)
-    poodleOpts = {"-build": poodleBuild,
-     "-dump": poodleDump,
-     "-restore": poodleRestore,
-     "-print": poodlePrint,
-     "-ignore": poodleIgnoreList,
-     "-help": poodleHelp,
-     "-exit": sys.exit}
-
-    #POODLE INPUTS - Search & Build options
-    if user_input in poodleOpts:
-        poodleOpts[user_input]()
-        poodleIndex()
-    elif user_input[0] == "-":
-        poodleOutput("Please enter a valid command!")
-        poodleIndex()
-    else:
-        poodleSearch(user_input)    
-        poodleIndex()
+	#POODLE INPUTS - Search & Build options
+	if user_input in poodleOpts:
+		poodleOpts[user_input]()
+	elif user_input[0] == "-":
+		poodleOutput("Please enter a valid command!")
+	elif len(urlGraph) < 1:
+		poodleOutput("You must build or restore a database before entering a search term!")
+	else:
+		poodleSearch(user_input)
+	poodleIndex()
 
 # ----- /POODLE -----#
 
