@@ -285,33 +285,40 @@ def poodleSetMaxResults():
 				maxDisplayedSet = False;
 
 def poodleSearch(term):
+	user_inputs = [] #list to hold multiple search terms if available
+	if "," in term:
+		user_inputs = term.split(",")
 
-    count = 0
-    termFoundAt = []
-    term = term.lower()
-    if term in index:
+	for inputTerm in user_inputs:
+		inputTerm = inputTerm.strip()
+		poodleSearch(inputTerm)
+		
+	count = 0
+	termFoundAt = []
+	term = term.lower()
+	if term in index:
 	    for url in index[term]:
 		    count += 1
 		    termFoundAt.append(url)
 	    
-    linkAndRank = []
-    for url in termFoundAt:
-        linkAndRank.append([[url], pageRanks[url]])
+	linkAndRank = []
+	for url in termFoundAt:
+		linkAndRank.append([[url], pageRanks[url]])
 
-    linkAndRank.sort(key = lambda x:x[1])   #lambda expression to sort by second list element (rank)
+	linkAndRank.sort(key = lambda x:x[1])   #lambda expression to sort by second list element (rank)
 
-    if count == 0:
-        poodleOutput("No results found.")
-    elif count > 1:
-        poodleOutput("{} results found!\n".format(count))
-    elif count == 1:
-        poodleOutput("{} result found!\n".format(count))
-    maxResultCounter = 0
-    for x in reversed(linkAndRank):
-        maxResultCounter += 1
-        if maxResultCounter >= MAX_RESULTS_DISPLAYED:
-                break
-        print "{} | RANK: {}".format(x[0], x[1])
+	if count == 0:
+		poodleOutput("No results found.")
+	elif count > 1:
+		poodleOutput("{} results found!\n".format(count))
+	elif count == 1:
+		poodleOutput("{} result found!\n".format(count))
+	maxResultCounter = 0
+	for x in reversed(linkAndRank):
+		maxResultCounter += 1
+		if maxResultCounter >= MAX_RESULTS_DISPLAYED:
+			break
+		print "{} | RANK: {}".format(x[0], x[1])
     
 def poodleIndex():
 	poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>")
