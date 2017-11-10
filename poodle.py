@@ -84,7 +84,7 @@ def getPageText(url):   #Gets every unique word on a page
 		startScript=html.find("<script")
     
 	ignore=set()
-	fin=open("ignorelist.txt","r")
+	fin=open("ignore.txt","r")
 	for word in fin:
 		ignore.add(word.strip())
 	fin.close()
@@ -169,6 +169,7 @@ def poodleHelp():
     print "-dump\t\tSave the POODLE database you built"
     print "-restore\tRetrieve the last saved POODLE database"
     print "-print\t\tShow the POODLE database (index, graph, and page ranks)"
+    print "-ignore\t\tPrint POODLE's ignore list"
     print "-help\t\tWhat do you think you're looking at, pal?"
     print "-exit\t\tExit the world as we know it!"
 
@@ -259,6 +260,12 @@ def poodlePrint():
     for url in pageRanks:
         print "{} | RANK: {}".format(url, pageRanks[url])
 
+def poodleIgnoreList():
+	fin = open("ignore.txt", "r")
+	for word in fin:
+		print word.strip()
+	fin.close()
+
 def poodleSearch(term):
     count = 0
     termFoundAt = []
@@ -294,6 +301,7 @@ def poodleIndex():
      "-dump": poodleDump,
      "-restore": poodleRestore,
      "-print": poodlePrint,
+     "-ignore": poodleIgnoreList,
      "-help": poodleHelp,
      "-exit": sys.exit}
 
@@ -315,5 +323,3 @@ poodleSetup()
 poodleIndex()
 
 #TODO: Multi-keyword search (poodle)
-#TODO: Remove common words from search index (ignore.txt / scraper)
-
