@@ -179,11 +179,6 @@ def poodleBuild():
     pageRanks = rankPages(urlGraph)
 
 def poodleDump():
-    #Save Crawled Index
-    fout = open("graph.txt", "w")
-    pickle.dump(urlGraph, fout)
-    fout.close()
-
     #Save Scraped Index
     fout = open("index.txt", "w")
     pickle.dump(index, fout)
@@ -197,7 +192,7 @@ def poodleDump():
     poodleOutput("Database saved!")
 
 def poodleRestore():
-    print "implement restore"
+    #Load Crawled Index
 
 def poodlePrint():
     print "url graph:\n"
