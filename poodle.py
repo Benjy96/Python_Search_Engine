@@ -233,19 +233,33 @@ def poodlePrint():
     for url in pageRanks:
         print "{} | RANK: {}".format(url, pageRanks[url])
 
+def poodleSearch(): #TODO: Sort returned & printed search results by page rank
+    count = 0
+            keyFoundAt = []
+            if user_input in index:
+                for url in index[user_input]:
+                    count += 1
+                    keyFoundAt.append(url)
+                poodleOutput("{} result(s) found:\n".format(count))
+                for url in keyFoundAt:
+                    print "{} | RANK: {}".format(url, pageRanks[url])
+            else:
+                poodleOutput("No results found.")
+
 def poodleIndex():
     poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
     user_input = raw_input()
     user_input = user_input.strip()
 
-    #Dictionary - Switch (Poodle Options)
+    #Build options (Dictionary/switch structure)
     poodleOpts = {"-build": poodleBuild,
      "-dump": poodleDump,
      "-restore": poodleRestore,
      "-print": poodlePrint,
      "-help": poodleHelp,
      "-exit": sys.exit}
-    
+
+    #POODLE INPUTS - Search & Build options
     if user_input in poodleOpts:
         poodleOpts[user_input]()
         poodleIndex()
@@ -253,18 +267,7 @@ def poodleIndex():
         poodleOutput("Please enter a valid command!")
         poodleIndex()
     else:
-        count = 0
-        keyFoundAt = []
-        if user_input in index:
-            for url in index[user_input]:
-                count += 1
-                keyFoundAt.append(url)
-            poodleOutput("{} result(s) found:\n".format(count))
-            for url in keyFoundAt:
-                print "{} | RANK: {}".format(url, pageRanks[url])
-        else:
-            poodleOutput("No results found.")
-            
+        poodleSearch()    
         poodleIndex()
 
 # ----- /POODLE -----#
