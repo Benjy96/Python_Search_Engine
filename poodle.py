@@ -1,5 +1,3 @@
-print "POODLE"
-print "-----"
 import urllib2
 import pickle
 import random
@@ -158,6 +156,7 @@ def poodleOutput(pString):
 def poodleSetup():
     rand = random.randint(0,len(cool_facts)-1)
     print cool_facts[rand]
+    print "-----"
     
 def poodleHelp():
     print ""
@@ -236,8 +235,8 @@ def poodlePrint():
 
 def poodleIndex():
     poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
-    setup_input = raw_input()
-    setup_input = setup_input.strip()
+    user_input = raw_input()
+    user_input = user_input.strip()
 
     #Dictionary - Switch (Poodle Options)
     poodleOpts = {"-build": poodleBuild,
@@ -247,12 +246,30 @@ def poodleIndex():
      "-help": poodleHelp,
      "-exit": sys.exit}
 
-    if setup_input in poodleOpts:
-        poodleOpts[setup_input]()
-        poodleIndex()
-    else:
+    #If we fell through the switch with a dash at the start of string, invalid command was entered
+    if user_input[0] == "-":
         poodleOutput("Please enter a valid command!")
         poodleIndex()
+    
+    if user_input in poodleOpts:
+        poodleOpts[user_input]()
+        poodleIndex()
+    else:
+        count = 0
+        keyFoundAt = []
+        if user_input in index:
+            for url in index[user_input]:
+                count += 1
+                keyFoundAt.append(url)
+            poodleOutput("{} results found:\n".format(count))
+            for url in keyFoundAt:
+                print "{} | RANK: {}".format(url, pageRanks[url])
+        else:
+            poodleOutput("No results found.")
+            
+        poodleIndex()
+
+# ----- /POODLE -----#
 
 #MAIN#
 poodleSetup()
