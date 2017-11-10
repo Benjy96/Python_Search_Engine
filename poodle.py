@@ -2,6 +2,7 @@ print "POODLE"
 print "-----"
 import urllib2
 import pickle
+import random
 
 # ----- CRAWLER ----- #
 #__GLOBALS__
@@ -149,8 +150,82 @@ def rankPages(graph):
     return ranks
 # ----- /PAGE RANKER ----- #
 
+# ----- POODLE ----- #
+
+cool_facts = ["POODLE rhymes with google. That type of rhyme is called assonance!", "POODLEs are ghastly looking dogs",
+              "POODLE is going to get me 100% on my coursework!", "POODLE knows what you did last summer, if you put it online, that is..."]
+
+def poodleOutput(pString):
+    print "\nPOODLE: %s" % (pString) 
+
+def poodleSetup():
+    rand = random.randint(0,len(cool_facts)-1)
+    print cool_facts[rand]
+    
+def poodleHelp():
+    print ""
+    print "POODLE Functionality:"
+    print "-build\t\tCreate a POODLE database"
+    print "-dump\t\tSave the POODLE database"
+    print "-restore\t\tRetrieve a POODLE database"
+    print "-print\t\tShow the POODLE database"
+    print "-help\t\tWhat do you think you're looking at, pal?"
+    poodleIndex()
+
+def poodleBuild():
+    poodleOutput("Give me a seed URL! >>> ")
+    crawl_seed = raw_input().strip()
+    crawl(crawl_seed)
+    print "----- CRAWLED PAGES -----"
+    for url in crawled:
+        print url
+    poodleOutput("Database created!")
+    poodleIndex()
+
+def poodleDump():
+    print "Implement dump pls, lol"
+
+def poodleRestore():
+    print "implement restore"
+
+def poodlePrint():
+    print "implement print"
+
+def poodleIndex():
+    poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
+    setup_input = raw_input()
+    setup_input = setup_input.strip()
+
+    #Dictionary - Switch
+    poodleOpts = {"-build": poodleBuild,
+     "-dump": poodleDump,
+     "-restore": poodleRestore,
+     "-print": poodlePrint,
+     "-help": poodleHelp}
+
+    if setup_input in poodleOpts:
+        poodleOpts[setup_input]()
+    else:
+        poodleOutput("Please enter a valid command!")
+        poodleIndex()
+    
 
 #MAIN#
-crawl("http://193.61.191.117/~B00664468/COM%20506%20-%20Professional%20Web%20Services%20Dev/B3/test_web/test_index.html")
-scrape(crawled)
-pageRanks = rankPages(urlGraph)
+poodleSetup()
+poodleIndex()
+
+
+#scrape(crawled)
+#pageRanks = rankPages(urlGraph)
+#TODO: Only do if NEW site (above)
+    #Implement input/setup options
+    #Create the database from user seed url
+    #other debug info, like saving/restoring/printing the db
+    #db is index from a seed
+
+
+
+
+
+
+
