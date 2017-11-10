@@ -97,8 +97,10 @@ def getPageText(url):   #Gets every unique word on a page
 			content=" ".join(html[nextCloseTag+1:nextOpenTag].strip().split())
 			#Remove punctuation
 			content = content.translate(None, string.punctuation)
-			pageText=pageText+" "+content
-			html=html[nextOpenTag+1:]
+			if content not in ignore:
+				pageText=pageText+" "+content
+				html=html[nextOpenTag+1:]
+			
 		else:
 			finished=True
 		
