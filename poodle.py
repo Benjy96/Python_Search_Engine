@@ -153,6 +153,7 @@ def rankPages(graph):
 
 # ----- POODLE ----- #
 #__GLOBALS__
+MAX_RESULTS_DISPLAYED = 10
 cool_facts = ["POODLE rhymes with google. That type of rhyme is called assonance!", "POODLEs are ghastly looking dogs",
               "POODLE is going to get me 100% on my coursework!", "POODLE knows what you did last summer, if you put it online, that is..."]
 
@@ -169,6 +170,7 @@ def poodleHelp():
     print "POODLE Functionality:"
     print "-build\t\tCreate a POODLE database (and set the depth of the web crawler)"
     print "-dump\t\tSave the POODLE database you built"
+    print "-search\t\tSet the maximum results returned by POODLE"
     print "-restore\tRetrieve the last saved POODLE database"
     print "-print\t\tShow the POODLE database (index, graph, and page ranks)"
     print "-ignore\t\tPrint POODLE's ignore list"
@@ -268,6 +270,20 @@ def poodleIgnoreList():
 		print word.strip()
 	fin.close()
 
+def poodleSetMaxResults():
+	global MAX_RESULTS_DISPLAYED
+	poodleOutput("Please set a maximum depth for the web crawl procedure! >>")
+
+	maxDisplayedSet = False
+	while maxDisplayedSet != True:
+		user_input = raw_input().strip()
+		if user_input.isdigit():
+			try:
+				maxDisplayedSet = True
+				MAX_RESULTS_DISPLAYED = int(user_input)
+			except:
+				maxDisplayedSet = False;
+
 def poodleSearch(term):
     count = 0
     termFoundAt = []
@@ -292,7 +308,9 @@ def poodleSearch(term):
     maxResultCounter = 0
     for x in reversed(linkAndRank):
         maxResultCounter += 1
-        if maxResultCounter == 10:
+        print maxResultCounter
+        print MAX_RESULTS_DISPLAYED
+        if maxResultCounter >= MAX_RESULTS_DISPLAYED:
                 break
         print "{} | RANK: {}".format(x[0], x[1])
     
@@ -301,7 +319,14 @@ def poodleIndex():
 	user_input = raw_input()
 	user_input = user_input.strip()
 	#Build options (Dictionary/switch structure)
-	poodleOpts = {"-build": poodleBuild,"-dump": poodleDump,"-restore": poodleRestore,"-print": poodlePrint,"-ignore": poodleIgnoreList,"-help": poodleHelp,"-exit": sys.exit}
+	poodleOpts = {"-build": poodleBuild,
+		      "-dump": poodleDump,
+		      "-search": poodleSetMaxResults,
+		      "-restore": poodleRestore,
+		      "-print": poodlePrint,
+		      "-ignore": poodleIgnoreList,
+		      "-help": poodleHelp,
+		      "-exit": sys.exit}
 
 	#POODLE INPUTS - Search & Build options
 	if user_input in poodleOpts:
