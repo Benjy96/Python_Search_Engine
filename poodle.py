@@ -148,6 +148,7 @@ def rankPages(graph):
 
 # ----- POODLE ----- #
 #__GLOBALS__
+INSENSITIVE_INDEX = {}
 cool_facts = ["POODLE rhymes with google. That type of rhyme is called assonance!", "POODLEs are ghastly looking dogs",
               "POODLE is going to get me 100% on my coursework!", "POODLE knows what you did last summer, if you put it online, that is..."]
 
@@ -182,6 +183,14 @@ def poodleBuild():
     scrape(crawled)
     global pageRanks
     pageRanks = rankPages(urlGraph)
+
+    global index    #convert index to lowercase
+    tempIndex = {}
+    for word in index:
+        tempIndex[word.lower()] = index[word]
+
+    del index
+    index = tempIndex
 
 def poodleDump():   #heh
     #Save Crawled Index
@@ -239,25 +248,27 @@ def poodlePrint():
 def poodleSearch(term): #TODO: Sort returned & printed search results by page rank
     count = 0
     termFoundAt = []
+    term = term.lower()
     if term in index:
         for url in index[term]:
             count += 1
             termFoundAt.append(url)
+            
+    linkAndRank = []
+    for url in termFoundAt:
+        linkAndRank.append([[url], pageRanks[url]])
 
-        linkAndRank = []
-        for url in termFoundAt:
-            linkAndRank.append([[url], pageRanks[url]])
+    linkAndRank.sort(key = lambda x:x[1])   #lambda expression to sort by second list element (rank)
 
-        linkAndRank.sort(key = lambda x:x[1], )   #lambda expression to sort by second list element (rank)
-
-        if count > 1 or count == 0:
-            poodleOutput("{} results found!\n".format(count))
-        else:
-            poodleOutput("{} result found!\n".format(count))
-        for x in reversed(linkAndRank):
-            print "{} | RANK: {}".format(x[0], x[1])
-    else:
+    if count == 0:
         poodleOutput("No results found.")
+    elif count > 1:
+        poodleOutput("{} results found!\n".format(count))
+    elif count == 1:
+        poodleOutput("{} result found!\n".format(count))
+    for x in reversed(linkAndRank):
+        print "{} | RANK: {}".format(x[0], x[1])
+    
 
 def poodleIndex():
     poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
