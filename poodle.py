@@ -18,9 +18,10 @@ def crawl(urlSeed):
         nextURL = nextPage[0]   #Retrieve URL
         nextIndex = nextPage[1] #Retrieve URL depth
         
-        crawled.append(nextURL) #Record that we have crawled the url(doing it now...)
+        #crawled.append(nextURL) #Record that we have crawled the url(doing it now...)
         if nextIndex < MAX_DEPTH:
-                newLinks = getLinksOnPage(nextURL, crawled)  #find all links at depth x      
+                newLinks = getLinksOnPage(nextURL, crawled)  #find all links at depth x
+                crawled.append(nextURL)
                 for links in newLinks:
                         toCrawl.append([links, nextIndex+1])    #found links are x+1 deep
 
@@ -30,6 +31,7 @@ def crawl(urlSeed):
 def getLinksOnPage(page,prevLinks):
         response = urllib2.urlopen(page)
         html = response.read()
+        print "page " + page
 
         allLinks,links,pos,allFound=[],[],0,False
         while not allFound:
@@ -160,7 +162,7 @@ def poodleOutput(pString):
 def poodleSetup():
     rand = random.randint(0,len(cool_facts)-1)
     print cool_facts[rand]
-    print "-----"
+    print "-----"    
     
 def poodleHelp():
     print ""
