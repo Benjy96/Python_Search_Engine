@@ -19,7 +19,6 @@ def crawl(urlSeed):
         nextIndex = nextPage[1] #Retrieve URL depth
         
         crawled.append(nextURL) #Record that we have crawled the url(doing it now...)
-
         if nextIndex < MAX_DEPTH:
                 newLinks = getLinksOnPage(nextURL, crawled)  #find all links at depth x      
                 for links in newLinks:
@@ -183,8 +182,11 @@ def poodleBuild():
     while depthSet != True:
         depth_input = raw_input().strip()
         if depth_input.isdigit():
-            depthSet = True
-            MAX_DEPTH = depthSet
+            try:
+                depthSet = True
+                MAX_DEPTH = int(depth_input)
+            except:
+                depthSet = False
     
     crawl(crawl_seed)
     poodleOutput("\n----- CRAWLED PAGES -----")
