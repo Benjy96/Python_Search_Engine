@@ -2,6 +2,7 @@ import urllib2
 import pickle
 import random
 import sys
+import string
 
 # ----- CRAWLER ----- #
 #__GLOBALS__
@@ -96,7 +97,7 @@ def getPageText(url):   #Gets every unique word on a page
 		nextOpenTag=html.find("<")
 		if nextOpenTag>-1:
 			content=" ".join(html[nextCloseTag+1:nextOpenTag].strip().split())
-			pageText=pageText+" "+content
+			pageText=pageText+" "+content.translate(None, string.punctuation)
 			html=html[nextOpenTag+1:]
 		else:
 			finished=True
@@ -184,7 +185,8 @@ def poodleBuild():
     global pageRanks
     pageRanks = rankPages(urlGraph)
 
-    global index    #convert index to lowercase
+    #create a case-insensitive index
+    global index    
     tempIndex = {}
     for word in index:
         tempIndex[word.lower()] = index[word]
@@ -245,7 +247,7 @@ def poodlePrint():
     for url in pageRanks:
         print "{} | RANK: {}".format(url, pageRanks[url])
 
-def poodleSearch(term): #TODO: Sort returned & printed search results by page rank
+def poodleSearch(term):
     count = 0
     termFoundAt = []
     term = term.lower()
@@ -303,7 +305,6 @@ poodleIndex()
 #TODO: Remove punctuation (scraper)
 #TODO: Multi-keyword search (poodle)
 #TODO: Remove common words from search index (ignore.txt / scraper)
-#TODO: Ignore case on search (poodle)
 #TODO: Limit depth of Web Crawler (scrape - DONE - add as poodle build option)
 #TODO: check correct pages are visited by crawler
 #TODO: check that max depth is working
