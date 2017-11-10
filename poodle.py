@@ -192,7 +192,17 @@ def poodleDump():
     poodleOutput("Database saved!")
 
 def poodleRestore():
-    #Load Crawled Index
+    #Load Scraped Index
+    fin = open("index.txt", "r")
+    index = pickle.load(fin)
+    fin.close()
+
+    #Load PageRank Values
+    fin = open("ranks.txt", "r")
+    pageRanks = pickle.load(fin)
+    fin.close()
+
+    poodleOutput("Database loaded!")
 
 def poodlePrint():
     print "url graph:\n"
@@ -216,7 +226,6 @@ def poodleIndex():
     else:
         poodleOutput("Please enter a valid command!")
         poodleIndex()
-    
 
 #MAIN#
 poodleSetup()
