@@ -231,7 +231,7 @@ def poodlePrint():
 
     poodleOutput("----- PAGE RANKS -----")
     for url in pageRanks:
-        print "{} = RANK: {}".format(url, pageRanks[url])
+        print "{} | RANK: {}".format(url, pageRanks[url])
 
 def poodleIndex():
     poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
@@ -259,7 +259,7 @@ def poodleIndex():
             for url in index[user_input]:
                 count += 1
                 keyFoundAt.append(url)
-            poodleOutput("{} results found:\n".format(count))
+            poodleOutput("{} result(s) found:\n".format(count))
             for url in keyFoundAt:
                 print "{} | RANK: {}".format(url, pageRanks[url])
         else:
