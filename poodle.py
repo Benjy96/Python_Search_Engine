@@ -289,12 +289,15 @@ def poodleSearch(term):
         poodleOutput("{} results found!\n".format(count))
     elif count == 1:
         poodleOutput("{} result found!\n".format(count))
+    maxResultCounter = 0
     for x in reversed(linkAndRank):
+        maxResultCounter += 1
+        if maxResultCounter == 10:
+                break
         print "{} | RANK: {}".format(x[0], x[1])
     
-
 def poodleIndex():
-	poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>> ")
+	poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>")
 	user_input = raw_input()
 	user_input = user_input.strip()
 	#Build options (Dictionary/switch structure)
