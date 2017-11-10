@@ -97,7 +97,9 @@ def getPageText(url):   #Gets every unique word on a page
 		nextOpenTag=html.find("<")
 		if nextOpenTag>-1:
 			content=" ".join(html[nextCloseTag+1:nextOpenTag].strip().split())
-			pageText=pageText+" "+content.translate(None, string.punctuation)
+			#Remove punctuation
+			content = content.translate(None, string.punctuation)
+			pageText=pageText+" "+content
 			html=html[nextOpenTag+1:]
 		else:
 			finished=True
@@ -312,11 +314,5 @@ poodleIndex()
 
 #TODO: Multi-keyword search (poodle)
 #TODO: Remove common words from search index (ignore.txt / scraper)
-#TODO: Limit depth of Web Crawler (scrape - DONE - add as poodle build option)
 #TODO: check correct pages are visited by crawler
-#TODO: check that max depth is working
-
-
-
-
 
