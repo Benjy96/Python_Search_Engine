@@ -171,7 +171,7 @@ def poodleBuild():
     poodleOutput("Give me a seed URL! >>> ")
     crawl_seed = raw_input().strip()
     crawl(crawl_seed)
-    poodleOutput("----- CRAWLED PAGES -----")
+    poodleOutput("\n----- CRAWLED PAGES -----")
     for url in crawled:
         print url
     poodleOutput("Database created!")
@@ -179,6 +179,11 @@ def poodleBuild():
     pageRanks = rankPages(urlGraph)
 
 def poodleDump():
+    #Save Crawled Index
+    fout = open("graph.txt", "w")
+    pickle.dump(urlGraph, fout)
+    fout.close()
+
     #Save Scraped Index
     fout = open("index.txt", "w")
     pickle.dump(index, fout)
@@ -192,6 +197,11 @@ def poodleDump():
     poodleOutput("Database saved!")
 
 def poodleRestore():
+    #Load Crawled Index
+    fin = open("graph.txt", "r")
+    urlGraph = pickle.load(fin)
+    fin.close()
+
     #Load Scraped Index
     fin = open("index.txt", "r")
     index = pickle.load(fin)
@@ -205,7 +215,7 @@ def poodleRestore():
     poodleOutput("Database loaded!")
 
 def poodlePrint():
-    print "url graph:\n"
+    poodleOutput("\n----- PAGE RANKS -----")
     print urlGraph
 
 def poodleIndex():
