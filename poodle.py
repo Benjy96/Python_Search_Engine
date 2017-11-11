@@ -11,7 +11,7 @@ urlGraph = {}   #Store EVERY URL contained by each URL {Key: [url1, url2, url3, 
 crawled=[]      #Store Unique URLs visited
 
 #__INTERACE__
-def crawl(urlSeed):
+def crawl(urlSeed, debug):
     toCrawl=[[urlSeed,0]] #becomes a list of lists - each element in the list is a list containing two items, URL and depth location.
     while toCrawl:
         nextPage = toCrawl.pop()#Get "hub" url and its depth level (depth x+1)
@@ -20,7 +20,7 @@ def crawl(urlSeed):
         
         #crawled.append(nextURL) #Record that we have crawled the url(doing it now...)
         if nextIndex < MAX_DEPTH:
-                newLinks = getLinksOnPage(nextURL, crawled)  #find all links at depth x
+                newLinks = getLinksOnPage(nextURL, crawled, debug)  #find all links at depth x
                 crawled.append(nextURL)
                 for links in newLinks:
                         toCrawl.append([links, nextIndex+1])    #found links are x+1 deep
@@ -28,10 +28,11 @@ def crawl(urlSeed):
 #__IMPLEMENTATION__
 #Gets returns unseen links on each page
 #Assigns all links to the global url graph
-def getLinksOnPage(page,prevLinks):
+def getLinksOnPage(page,prevLinks,debug):
         response = urllib2.urlopen(page)
         html = response.read()
-        print "page " + page
+        if debug == True:
+            print "page " + page
 
         allLinks,links,pos,allFound=[],[],0,False
         while not allFound:
@@ -154,6 +155,7 @@ def rankPages(graph):
 # ----- POODLE ----- #
 #__GLOBALS__
 MAX_RESULTS_DISPLAYED = 10
+DEBUG_MODE = False
 cool_facts = ["POODLE rhymes with google. That type of rhyme is called assonance!", "POODLEs are ghastly looking dogs",
               "POODLE is going to get me 100% on my coursework!", "POODLE knows what you did last summer, if you put it online, that is..."]
 
@@ -171,6 +173,7 @@ def poodleHelp():
     print "-build\t\tCreate a POODLE database (and set the depth of the web crawler)"
     print "-dump\t\tSave the POODLE database you built"
     print "-search\t\tSet the maximum results returned by POODLE"
+    print "-debug\t\tSet POODLE's debug mode (enables under the hood printing)"
     print "-restore\tRetrieve the last saved POODLE database"
     print "-print\t\tShow the POODLE database (index, graph, and page ranks)"
     print "-ignore\t\tPrint POODLE's ignore list"
@@ -193,7 +196,7 @@ def poodleBuild():
             except:
                 depthSet = False
     
-    crawl(crawl_seed)
+    crawl(crawl_seed, DEBUG_MODE)
     poodleOutput("\n----- CRAWLED PAGES -----")
     for url in crawled:
         print url
@@ -257,8 +260,8 @@ def poodlePrint():
 
     poodleOutput("----- URL GRAPH -----")
     for page in urlGraph:
-        print page
-        print "\t{}".format(urlGraph[page])
+        print "PAGE: {}\n".format(page)
+        print "\t{}\n".format(urlGraph[page])
 
     poodleOutput("----- PAGE RANKS -----")
     for url in pageRanks:
@@ -284,6 +287,31 @@ def poodleSetMaxResults():
 			except:
 				maxDisplayedSet = False;
 
+def poodleDebug():
+    global DEBUG_MODE
+    poodleOutput("Current Debug Mode: {}".format(DEBUG_MODE))
+    changeDebug = False;
+    while changeDebug == False:
+        poodleOutput("Set the debug mode? (yes or no) >>")
+        user_input = raw_input().strip()
+        if user_input.lower() == "yes":
+            changeDebug = True
+            break
+        elif user_input.lower() == "no":
+            changeDebug = False
+            break
+        
+    debugSet = False
+    while debugSet != True and changeDebug == True:
+        poodleOutput("Please set debug to either true or false >>")
+        user_input = raw_input().strip()
+        if user_input.lower() == "true":
+            debugSet = True
+            DEBUG_MODE = True
+        elif user_input.lower() == "false":
+            debugSet = True
+            DEBUG_MODE = False
+        
 def poodleSearch(term):
 	user_inputs = [] #list to hold multiple search terms if available
 	if "," in term:
@@ -329,6 +357,7 @@ def poodleIndex():
 	poodleOpts = {"-build": poodleBuild,
 		      "-dump": poodleDump,
 		      "-search": poodleSetMaxResults,
+                      "-debug": poodleDebug,
 		      "-restore": poodleRestore,
 		      "-print": poodlePrint,
 		      "-ignore": poodleIgnoreList,
