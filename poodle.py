@@ -26,8 +26,8 @@ def crawl(urlSeed):
                         toCrawl.append([links, nextIndex+1])    #found links are x+1 deep
 
 #__IMPLEMENTATION__
-#Gets returns unseen links on each page
-#Assigns all links to the global url graph
+#Sets ALL Links on each page <- assigned to global URL graph
+#Returns UNIQUE Links on each page <- used by crawler
 def getLinksOnPage(page,prevLinks):
         response = urllib2.urlopen(page)
         html = response.read()
@@ -280,7 +280,7 @@ def poodleIgnoreList():
 
 def poodleSetMaxResults():
 	global MAX_RESULTS_DISPLAYED
-	poodleOutput("Please set a maximum depth for the web crawl procedure! >>")
+	poodleOutput("Please set the amount of search results to display! >>")
 
 	maxDisplayedSet = False
 	while maxDisplayedSet != True:
