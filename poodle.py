@@ -32,7 +32,7 @@ def getLinksOnPage(page,prevLinks):
         response = urllib2.urlopen(page)
         html = response.read()
         if DEBUG_MODE == True:
-            print "DEBUG: " + page
+            poodleDebugOutput("Crawling " + page)
 
         allLinks,links,pos,allFound=[],[],0,False
         while not allFound:
@@ -47,6 +47,8 @@ def getLinksOnPage(page,prevLinks):
 
                                 allLinks.append(url)    #store ALL links
                                 if not url in links and not url in prevLinks:   #store UNIQUE links
+                                        if DEBUG_MODE == True:
+                                            poodleDebugOutput("Unseen page: " + url)
                                         links.append(url)     
                         closeTag=html.find("</a>",aTag)
                         pos=closeTag+1
@@ -160,7 +162,10 @@ cool_facts = ["POODLE rhymes with google. That type of rhyme is called assonance
               "POODLE is going to get me 100% on my coursework!", "POODLE knows what you did last summer, if you put it online, that is..."]
 
 def poodleOutput(pString):
-    print "\nPOODLE: %s" % (pString) 
+    print "\nPOODLE: %s" % (pString)
+
+def poodleDebugOutput(pString):
+    print "DEBUG: [ {} ]".format(pString)
 
 def poodleSetup():
     rand = random.randint(0,len(cool_facts)-1)
