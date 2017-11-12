@@ -252,18 +252,21 @@ def poodleRestore():
     #Load Crawled Index
     fin = open("graph.txt", "r")
     global urlGraph
+    urlGraph = {}
     urlGraph = pickle.load(fin)
     fin.close()
 
     #Load Scraped Index
     fin = open("index.txt", "r")
     global index
+    index = {}
     index = pickle.load(fin)
     fin.close()
 
     #Load PageRank Values
     fin = open("ranks.txt", "r")
     global pageRanks
+    pageRanks = {}
     pageRanks = pickle.load(fin)
     fin.close()
 
