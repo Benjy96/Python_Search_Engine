@@ -34,6 +34,7 @@ def crawl(urlSeed):
 def getLinksOnPage(page,prevLinks):
         response = urllib2.urlopen(page)
         html = response.read()
+
         poodleDebugOutput("Crawling " + page)
 
         allLinks,links,pos,allFound=[],[],0,False
@@ -193,6 +194,11 @@ def poodleHelp():
 def poodleBuild():
     poodleOutput("Give me a seed URL! >>")
     crawl_seed = raw_input().strip()
+    try:
+        urllib2.urlopen(crawl_seed)
+    except:
+        poodleOutput("Invalid URL")
+        return poodleBuild()
     
     global MAX_DEPTH
     depthSet = False
