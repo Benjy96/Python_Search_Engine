@@ -151,10 +151,7 @@ def ignoreScriptTag(html):
 pageRanks = {}
 
 #__INTERFACE__
-def rankPages(graph):
-    global pageRanks
-    pageRanks = {}
-    
+def rankPages(graph): 
     d=0.85
     numLoops=10
     npages=len(graph)
@@ -233,6 +230,8 @@ def poodleBuild():
     scrape(urlGraph)
 
     #4. Generate Ranks
+    global pageRanks
+    pageRanks = {}
     pageRanks = rankPages(urlGraph)
 
     #create a case-insensitive index
