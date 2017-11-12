@@ -12,6 +12,9 @@ crawled=[]      #Store Unique URLs visited
 
 #__INTERACE__
 def crawl(urlSeed):
+    global crawled# no return, reset
+    crawled = []
+    
     toCrawl=[[urlSeed,0]] #becomes a list of lists - each element in the list is a list containing two items, URL and depth location.
     while toCrawl:
         nextPage = toCrawl.pop()#Get "hub" url and its depth level (depth x+1)
@@ -31,8 +34,7 @@ def crawl(urlSeed):
 def getLinksOnPage(page,prevLinks):
         response = urllib2.urlopen(page)
         html = response.read()
-        if DEBUG_MODE == True:
-            poodleDebugOutput("Crawling " + page)
+        poodleDebugOutput("Crawling " + page)
 
         allLinks,links,pos,allFound=[],[],0,False
         while not allFound:
@@ -47,8 +49,7 @@ def getLinksOnPage(page,prevLinks):
 
                                 allLinks.append(url)    #store ALL links
                                 if not url in links and not url in prevLinks:   #store UNIQUE links
-                                        if DEBUG_MODE == True:
-                                            poodleDebugOutput("Unseen page: " + url)
+                                        poodleDebugOutput("Unseen page: " + url)
                                         links.append(url)     
                         closeTag=html.find("</a>",aTag)
                         pos=closeTag+1
@@ -68,7 +69,11 @@ pageWords = []
 
 #__INTERFACE__
 def scrape(urls):   #creates an index and saves in a file
+        global index #no return, reset
+        index = {}
+        
         for url in urls:
+                poodleDebugOutput("Scraping: {}".format(url))
                 #get Page text for the current url
                 pageWords = getPageText(url)
                 #add page to index - correspond to keyword
@@ -76,45 +81,45 @@ def scrape(urls):   #creates an index and saves in a file
 
 #__IMPLEMENTATION__
 def getPageText(url):   #Gets every unique word on a page
-	response = urllib2.urlopen(url)
-	html = response.read()
+    response = urllib2.urlopen(url)
+    html = response.read()
 
-	pageText,pageWords="",[]
-	html=html[html.find("<body")+5:html.find("</body>")]
+    pageText,pageWords="",[]
+    html=html[html.find("<body")+5:html.find("</body>")]
 
-	startScript=html.find("<script")
-	while startScript>-1:
-		endScript=html.find("</script>")
-		html=html[:startScript]+html[endScript+9:]
-		startScript=html.find("<script")
+    startScript=html.find("<script")
+    while startScript>-1:
+        endScript=html.find("</script>")
+        html=html[:startScript]+html[endScript+9:]
+        startScript=html.find("<script")
     
-	ignore=set()
-	fin=open("ignore.txt","r")
-	for word in fin:
-		ignore.add(word.strip())
-	fin.close()
-    	
-	finished=False
-	while not finished:
-		nextCloseTag=html.find(">")
-		nextOpenTag=html.find("<")
-		if nextOpenTag>-1:
-			content=" ".join(html[nextCloseTag+1:nextOpenTag].strip().split())
-			#Remove punctuation
-			content = content.translate(None, string.punctuation)
-			if content not in ignore:
-				pageText=pageText+" "+content
-				html=html[nextOpenTag+1:]
-			
-		else:
-			finished=True
-		
-	for word in pageText.split():
-		if word[0].isalnum() and not word in ignore:
-			if not word in pageWords:
-				pageWords.append(word)
-	
-	return pageWords
+    ignore=set()
+    fin=open("ignore.txt","r")
+    for word in fin:
+        word = word.lower()
+        ignore.add(word.strip())
+    fin.close()
+        
+    finished=False
+    while not finished:
+        nextCloseTag=html.find(">")
+        nextOpenTag=html.find("<")
+        if nextOpenTag>-1:
+            content=" ".join(html[nextCloseTag+1:nextOpenTag].strip().split())
+            #Remove punctuation
+            content = content.translate(None, string.punctuation)
+            pageText=pageText+" "+content
+            html=html[nextOpenTag+1:]
+            
+        else:
+            finished=True
+        
+    for word in pageText.split():
+        if word[0].isalnum() and not word.lower() in ignore:
+            if not word in pageWords:
+                pageWords.append(word)
+    
+    return pageWords
 
 def addPageToIndex (index,pageWords,url):       #Page added "implicitly"
 	for word in pageWords:  #for each unique word on the current page
@@ -165,7 +170,8 @@ def poodleOutput(pString):
     print "\nPOODLE: %s" % (pString)
 
 def poodleDebugOutput(pString):
-    print "DEBUG: [ {} ]".format(pString)
+    if DEBUG_MODE == True:
+        print "DEBUG: [ {} ]".format(pString)
 
 def poodleSetup():
     rand = random.randint(0,len(cool_facts)-1)
@@ -188,11 +194,11 @@ def poodleHelp():
 def poodleBuild():
     poodleOutput("Give me a seed URL! >>")
     crawl_seed = raw_input().strip()
-    poodleOutput("Please set a maximum depth for the web crawl procedure! >>")
-
+    
     global MAX_DEPTH
     depthSet = False
     while depthSet != True:
+        poodleOutput("Please set a maximum depth for the web crawl procedure! >>")
         depth_input = raw_input().strip()
         if depth_input.isdigit():
             try:
@@ -200,13 +206,17 @@ def poodleBuild():
                 MAX_DEPTH = int(depth_input)
             except:
                 depthSet = False
-    
+
+    #2. Generate URL Graph
     crawl(crawl_seed)
     poodleOutput("\n----- CRAWLED PAGES -----")
-    for url in crawled:
+    for url in crawled: #could use the url graph here - ordered with list though
         print url
-    poodleOutput("Database created!")
-    scrape(crawled)
+
+    #3. Generate Index
+    scrape(urlGraph)
+
+    #4. Generate Ranks
     global pageRanks
     pageRanks = rankPages(urlGraph)
 
@@ -218,6 +228,7 @@ def poodleBuild():
 
     del index
     index = tempIndex
+    poodleOutput("Database created!")
 
 def poodleDump():   #heh
     #Save Crawled Index
