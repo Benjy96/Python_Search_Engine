@@ -12,8 +12,8 @@ crawled=[]      #Store Unique URLs visited
 
 #__INTERACE__
 def crawl(urlSeed):
-    global crawled# no return, reset
-    crawled = []
+    global crawled, urlGraph# no return, reset
+    crawled, urlGraph = [],{}
     
     toCrawl=[[urlSeed,0]] #becomes a list of lists - each element in the list is a list containing two items, URL and depth location.
     while toCrawl:
@@ -69,8 +69,8 @@ pageWords = []
 
 #__INTERFACE__
 def scrape(urls):   #creates an index and saves in a file
-        global index #no return, reset
-        index = {}
+        global index, pageWords #no return, reset
+        index, pageWords = {},[]
         
         for url in urls:
                 poodleDebugOutput("Scraping: {}".format(url))
@@ -152,6 +152,9 @@ pageRanks = {}
 
 #__INTERFACE__
 def rankPages(graph):
+    global pageRanks
+    pageRanks = {}
+    
     d=0.85
     numLoops=10
     npages=len(graph)
@@ -230,8 +233,6 @@ def poodleBuild():
     scrape(urlGraph)
 
     #4. Generate Ranks
-    global pageRanks
-    pageRanks = {}
     pageRanks = rankPages(urlGraph)
 
     #create a case-insensitive index
