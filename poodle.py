@@ -86,7 +86,6 @@ def getPageText(url):   #Gets every unique word on a page
 
     pageText,pageWords="",[]
     html=html[html.find("<body")+5:html.find("</body>")]
-    #html = ignoreScriptTag(html)
 
     startScript=html.find("<script")
     while startScript>-1:
@@ -131,19 +130,6 @@ def addWordToIndex(index,word,url):
                 index[word].append(url) #go to Key: "Word", add the current page URL
         else:
                 index[word] = [url]               
-
-def ignoreScriptTag(html):
-        while html.find("<script") != -1:
-                #get pointer to <script & </script>
-                #concat bit from OpenTag & up to L, after R & up to CloseTag
-                scriptTagPointer = html[html.find("<script"):html.find("</script>")]
-                #html.find(html) = 0 <- matches a string and returns index of 1st char
-                htmlBeforeScript = html[html.find(html):html.find(scriptTagPointer)]
-                htmlAfterScript = html[html.find(scriptTagPointer):html.find(html)]
-                htmlBeforeScript.join(htmlAfterScript)
-                html = htmlBeforeScript
-        return html
-
 # ----- /SCRAPER ----- #
 
 # ----- PAGE RANKER ----- #
