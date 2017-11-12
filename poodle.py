@@ -86,7 +86,7 @@ def getPageText(url):   #Gets every unique word on a page
 
     pageText,pageWords="",[]
     html=html[html.find("<body")+5:html.find("</body>")]
-    html = ignoreScriptTag(html)
+    #html = ignoreScriptTag(html)
 
     startScript=html.find("<script")
     while startScript>-1:
@@ -231,6 +231,7 @@ def poodleBuild():
 
     #4. Generate Ranks
     global pageRanks
+    pageRanks = {}
     pageRanks = rankPages(urlGraph)
 
     #create a case-insensitive index
