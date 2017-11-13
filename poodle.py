@@ -181,19 +181,23 @@ def poodleSetup():
 def poodleHelp():
     print ""
     print "POODLE Functionality:"
+    print "----- POODLE DATABASE -----"
     print "-build\t\tCreate a POODLE database (and set the depth of the web crawler)"
     print "-dump\t\tSave the POODLE database you built"
-    print "-search\t\tSet the maximum results returned by POODLE"
-    print "-debug\t\tSet POODLE's debug mode (enables under the hood printing)"
     print "-restore\tRetrieve the last saved POODLE database"
     print "-print\t\tShow the POODLE database (index, graph, and page ranks)"
+    print "----- POODLE BEHAVIOUR -----"
+    print "-search\t\tSet the maximum results returned by POODLE"
+    print "-debug\t\tSet POODLE's debug mode (enables under the hood printing)"
     print "-ignore\t\tPrint POODLE's ignore list"
+    print "----- META POODLE -----"
     print "-help\t\tWhat do you think you're looking at, pal?"
     print "-exit\t\tExit the world as we know it!"
 
 def poodleBuild():
     poodleOutput("Give me a seed URL! >>")
     crawl_seed = raw_input().strip()
+    #Invalid URL check
     try:
         urllib2.urlopen(crawl_seed)
     except:
@@ -237,60 +241,69 @@ def poodleBuild():
     poodleOutput("Database created!")
 
 def poodleDump():   #heh
-    #Save Crawled Index
-    fout = open("graph.txt", "w")
-    pickle.dump(urlGraph, fout)
-    fout.close()
+    if urlGraph:
+        #Save Crawled Index
+        fout = open("graph.txt", "w")
+        pickle.dump(urlGraph, fout)
+        fout.close()
 
-    #Save Scraped Index
-    fout = open("index.txt", "w")
-    pickle.dump(index, fout)
-    fout.close()
+        #Save Scraped Index
+        fout = open("index.txt", "w")
+        pickle.dump(index, fout)
+        fout.close()
 
-    #Save Page Ranks
-    fout = open("ranks.txt", "w")
-    pickle.dump(pageRanks, fout)
-    fout.close()
+        #Save Page Ranks
+        fout = open("ranks.txt", "w")
+        pickle.dump(pageRanks, fout)
+        fout.close()
 
-    poodleOutput("Database saved!")
+        poodleOutput("Database saved!")
+    else:
+        poodleOutput("Nothing to dump!")
 
 def poodleRestore():
-    #Load Crawled Index
-    fin = open("graph.txt", "r")
-    global urlGraph
-    urlGraph = {}
-    urlGraph = pickle.load(fin)
-    fin.close()
+    try:
+        #Load Crawled Index
+        fin = open("graph.txt", "r")
+        global urlGraph
+        urlGraph = {}
+        urlGraph = pickle.load(fin)
+        fin.close()
 
-    #Load Scraped Index
-    fin = open("index.txt", "r")
-    global index
-    index = {}
-    index = pickle.load(fin)
-    fin.close()
+        #Load Scraped Index
+        fin = open("index.txt", "r")
+        global index
+        index = {}
+        index = pickle.load(fin)
+        fin.close()
 
-    #Load PageRank Values
-    fin = open("ranks.txt", "r")
-    global pageRanks
-    pageRanks = {}
-    pageRanks = pickle.load(fin)
-    fin.close()
+        #Load PageRank Values
+        fin = open("ranks.txt", "r")
+        global pageRanks
+        pageRanks = {}
+        pageRanks = pickle.load(fin)
+        fin.close()
 
-    poodleOutput("Database loaded!")
+        poodleOutput("Database loaded!")
+    except:
+        poodleOutput("Please check that graph.txt, index.txt, and ranks.txt exist in poodle's directory")
 
 def poodlePrint():
-    poodleOutput("----- INDEXED WORDS & RESPECTIVE LOCATIONS -----")
-    for keyword in index:
-        print "{}: {}".format(keyword, index[keyword])
+    if urlGraph:
+        poodleOutput("----- INDEXED WORDS & RESPECTIVE LOCATIONS -----")
+        for keyword in index:
+            print "{}: {}".format(keyword, index[keyword])
 
-    poodleOutput("----- URL GRAPH -----")
-    for page in urlGraph:
-        print "PAGE: {}\n".format(page)
-        print "\t{}\n".format(urlGraph[page])
+        poodleOutput("----- URL GRAPH -----")
+        for page in urlGraph:
+            print "PAGE: {}\n".format(page)
+            print "\t{}\n".format(urlGraph[page])
 
-    poodleOutput("----- PAGE RANKS -----")
-    for url in pageRanks:
-        print "{} | RANK: {}".format(url, pageRanks[url])
+        poodleOutput("----- PAGE RANKS -----")
+        for url in pageRanks:
+            print "{} | RANK: {}".format(url, pageRanks[url])
+    else:
+        poodleOutput("No database loaded!")
 
 def poodleIgnoreList():
 	fin = open("ignore.txt", "r")
