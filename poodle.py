@@ -389,7 +389,7 @@ def poodleSearch(term):
 			print "{} | RANK: {}".format(x[0], x[1])
     
 def poodleIndex():
-	poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing) >>")
+	poodleOutput("Enter -help for POODLE commands (if you don't know what you're doing), or enter a search term! >>")
 	user_input = raw_input()
 	user_input = user_input.strip()
 	#Build options (Dictionary/switch structure)
