@@ -242,19 +242,16 @@ def poodleBuild():
 
 def poodleDump():   #heh
     if urlGraph:
-        #Save Crawled Index
-        fout = open("graph.txt", "w")
-        pickle.dump(urlGraph, fout)
-        fout.close()
+        #create data structure to store in one file
+        database = {}
 
-        #Save Scraped Index
-        fout = open("index.txt", "w")
-        pickle.dump(index, fout)
-        fout.close()
+        database["urlGraph"] = urlGraph
+        database["index"] = index
+        database["pageRanks"] = pageRanks
 
         #Save Page Ranks
-        fout = open("ranks.txt", "w")
-        pickle.dump(pageRanks, fout)
+        fout = open("database.txt", "w")
+        pickle.dump(database, fout)
         fout.close()
 
         poodleOutput("Database saved!")
@@ -263,30 +260,31 @@ def poodleDump():   #heh
 
 def poodleRestore():
     try:
+        #Data structure to retrieve the site's graph, keyword index, and page ranks
+        database = {}
+
+        fin = open("database.txt", "r")
+        database = pickle.load(fin)
+        fin.close()
+        
         #Load Crawled Index
-        fin = open("graph.txt", "r")
         global urlGraph
         urlGraph = {}
-        urlGraph = pickle.load(fin)
-        fin.close()
+        urlGraph = database["urlGraph"]
 
         #Load Scraped Index
-        fin = open("index.txt", "r")
         global index
         index = {}
-        index = pickle.load(fin)
-        fin.close()
+        index = database["index"]
 
         #Load PageRank Values
-        fin = open("ranks.txt", "r")
         global pageRanks
         pageRanks = {}
-        pageRanks = pickle.load(fin)
-        fin.close()
+        pageRanks = database["pageRanks"]
 
         poodleOutput("Database loaded!")
     except:
-        poodleOutput("Please check that graph.txt, index.txt, and ranks.txt exist in poodle's directory")
+        poodleOutput("Couldn't access database.txt. Please check POODLE's directory!")
 
 def poodlePrint():
     if urlGraph:
